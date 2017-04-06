@@ -17,7 +17,7 @@ public class DelaySlider extends AbstractValueSlider {
 	private Delayer delayer;
 
 	public DelaySlider(Delayer delayer) {
-		super(0, 5000, 0, "Transmission Delay");
+		super(0, 10000, 0, "Transmission Delay");
 		this.delayer = delayer;
 	}
 

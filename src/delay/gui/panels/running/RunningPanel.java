@@ -11,7 +11,6 @@ package delay.gui.panels.running;
 
 import java.awt.Color;
 import java.awt.GridBagConstraints;
-import java.net.InetAddress;
 
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
@@ -27,6 +26,7 @@ public class RunningPanel extends JPanel {
 	
 	private PanelSwitcher panelSwitcher;
 	private Delayer delayer;
+	private InfiniteDelayCheckbox infiniteDelayCheckbox;
 	private JLabel statusLabel;
 	
 	public RunningPanel(PanelSwitcher panelSwitcher, Delayer delayer) {
@@ -36,12 +36,14 @@ public class RunningPanel extends JPanel {
 		statusLabel = new JLabel();
 		statusLabel.setOpaque(true);
 		statusLabel.setBorder(new EmptyBorder(5, 5, 5, 5));
+		
+		DelaySlider slider = new DelaySlider(delayer);
+		infiniteDelayCheckbox = new InfiniteDelayCheckbox(delayer, slider);
 
 		SimpleGridBagLayout layout = new SimpleGridBagLayout(this);
-		final DelaySlider slider = new DelaySlider(delayer);
 		layout.addToGrid(slider, 0, 0, 1, 1, GridBagConstraints.BOTH, 1, 0);
 		layout.addToGrid(statusLabel, 0, 1, 1, 1);
-		layout.addToGrid(new InfiniteDelayCheckbox(delayer, slider), 0, 2, 1, 1);
+		layout.addToGrid(infiniteDelayCheckbox, 0, 2, 1, 1);
 		layout.addToGrid(new AbortButton(this), 0, 3, 1, 1);
 	}
 	
@@ -49,6 +51,14 @@ public class RunningPanel extends JPanel {
 		delayer.setConnectionListener(null);
 		delayer.stop();
 		panelSwitcher.displayStartPanel();
+	}
+
+	public void reset() {
+		statusLabel.setText("Waiting for connection...");
+		statusLabel.setBackground(Color.ORANGE);
+		if (infiniteDelayCheckbox.isSelected())
+			infiniteDelayCheckbox.doClick();
+		delayer.setSuspendMessages(false);
 	}
 	
 	private ConnectionListener listener = new ConnectionListener() {
@@ -69,10 +79,4 @@ public class RunningPanel extends JPanel {
 			statusLabel.setBackground(new Color(60, 200, 0));
 		}
 	};
-
-	public void reset() {
-		statusLabel.setText("Waiting for connection...");
-		statusLabel.setBackground(Color.ORANGE);
-		delayer.setConnectionListener(listener);
-	}
 }

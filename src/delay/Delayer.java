@@ -206,9 +206,6 @@ public class Delayer {
 				System.out.println("Failed to read data");
 				connectionListener.connectionLost("The connection closed");
 			}
-			
-//			System.out.println("Terminated!!!");
-//			connectionListener.connectionLost("The connection closed");
 		}
 
 		private void addToTimer(final Task timerTask) {
